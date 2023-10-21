@@ -1,5 +1,9 @@
 # Findlove
-
+configure you are database 
+crerate superuser to chechk admin process 
+before runing project install( pip install xhtml2pdf) to genrate pdf
+before login you must be Register (for create user)
+this are functions and it navigation
 - [Function 1: Home Page](#home-page)
 - [Function 2: Register User](#register-user)
 - [Function 3: Login](#login)
