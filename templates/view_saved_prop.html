@@ -1,0 +1,38 @@
+{% extends "home.html" %}
+
+{% block title %}View Proposal{% endblock %}
+
+{% block content %}
+    <!-- Header -->
+    <header class="mt-5 text-center">
+        <h1>View Proposal</h1>
+    </header>
+
+    <!-- Proposal Details -->
+    <main class="mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                {% if proposal %}
+                    <h2>{{ proposal.title }}</h2>
+                    <p><strong>Company Name:</strong> {{ proposal.company_name }}</p>
+                    <p><strong>Contact Name:</strong> {{ proposal.contact_name }}</p>
+                    <p><strong>Contact Email:</strong> {{ proposal.contact_email }}</p>
+                    <p><strong>Contact Phone:</strong> {{ proposal.contact_phone }}</p>
+                    <hr>
+                    <h3>Proposal Summary</h3>
+                    <p>{{ proposal.proposal_summary }}</p>
+                    <hr>
+                    <h3>Project Planning</h3>
+                    <p>{{ proposal.project_planning }}</p>
+                    <hr>
+                    <h3>Financing</h3>
+                    <p>{{ proposal.financing }}</p>
+                    <hr>                    
+                {% else %}
+                    <p>The requested proposal does not exist.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+    </main>
+{% endblock %}

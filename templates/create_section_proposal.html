@@ -1,0 +1,11 @@
+<!-- create_section_proposal.html -->
+{% extends "home.html" %}
+
+{% block content %}
+  <h1>Create Section Proposal</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Section Proposal</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,149 @@
+{% extends "home.html" %}
+
+{% block title %}List Proposals{% endblock %}
+
+{% block content %}
+    <!-- Header -->
+    <header class="mt-5 text-center">
+        <h1>List of Proposals</h1>
+    </header>
+
+    <h1>hello {{user.username}}</h1>
+    <!-- Proposal List -->
+    <main class="mt-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Company Name</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for proposal in proposals %}
+                    <tr draggable="true" data-id="{{ proposal.id }}" data-original-order="{{ proposal.order }}">
+
+                        <td>{{ proposal.title }}</td>
+                        <td>{{ proposal.company_name }}</td>
+                        <td>{{ proposal.username }}</td>
+                        <td>
+                            <form action="{% url 'save_record' proposal.id %}" method="POST">
+                                {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            </form>
+                        </td>
+                        <td>
+                            <a href="{% url 'view_proposal' proposal.id %}" class="btn btn-primary">View</a>
+                            <a href="{% url 'edit_proposal' proposal.id %}" class="btn btn-warning">Edit</a>
+                            <a href="{% url 'delete_proposal' proposal.id %}" class="btn btn-danger">Delete</a>
+                            <button class="btn btn-secondary reorder-button" data-proposal-id="{{ proposal.id }}">Reorder Sections</button>
+                            <!-- Section list for reordering (hidden by default) -->
+                            <ul class="section-list hidden" id="section-list-{{ proposal.id }}">
+                                {% for section in proposal.proposalsection_set.all %}
+                                    <li class="section-item" draggable="true" data-section-id="{{ section.id }}">{{ section.section_name }}</li>
+                                    <li class="section-item" draggable="true" data-section-id="{{ content.id }}">{{ section.content }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+    {% if not pdf_version %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+                    
+            function getCookie(name) {
+                let value = "; " + document.cookie;
+                let parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
+            }
+            const csrfToken = getCookie('csrftoken');
+            
+            // Store the original order of the proposals on page load
+            const originalOrder = Array.from(document.querySelectorAll('tbody tr')).map(row => row.getAttribute('data-id'));
+            let draggedProposal = null;
+            
+            function handleProposalReordering(proposalOrder) {
+                fetch(`/reorder_proposals/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ proposal_order: proposalOrder }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Proposals reordered successfully.');
+                    } else {
+                        alert('Failed to save reordered proposals.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        
+            const tableBody = document.querySelector("tbody");
+        
+            tableBody.addEventListener("dragstart", (e) => {
+                console.log("Dragging started");
+                e.target.style.opacity = '0.5';
+                draggedProposal = e.target;
+            }, false);
+        
+            tableBody.addEventListener("dragover", (e) => {
+                e.preventDefault();
+            });
+        
+            tableBody.addEventListener("dragend", (e) => {
+                console.log("Dragging ended");
+                e.target.style.opacity = '';
+            });
+        
+            tableBody.addEventListener("drop", (e) => {
+                console.log("Dropped item");
+                e.preventDefault();
+        
+                // Reset opacity for the dragged element
+                draggedProposal.style.opacity = '1';
+        
+                const currentRow = e.target.closest('tr');
+                if (currentRow && draggedProposal !== currentRow) {
+                    console.log("Inserting dragged proposal before the current row");
+                    tableBody.insertBefore(draggedProposal, currentRow.nextSibling);
+        
+                    const proposalOrder = Array.from(tableBody.querySelectorAll('tr')).map(row => row.getAttribute('data-id'));
+                    handleProposalReordering(proposalOrder);
+                }
+            });
+        
+            // Resetting to original position on reorder click
+            const reorderButtons = document.querySelectorAll('.reorder-button');
+            reorderButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent any default action
+                    const proposalId = button.getAttribute('data-proposal-id');
+                    const proposalRow = document.querySelector(`tr[data-id='${proposalId}']`);
+                    
+                    // Reset the row to its original position
+                    const originalPosition = originalOrder.indexOf(proposalId);
+                    const newRow = tableBody.rows[originalPosition];
+                    
+                    tableBody.insertBefore(proposalRow, newRow.nextSibling);
+                });
+            });
+        
+        });
+        
+    </script>
+    {% endif %}
+    
+</body>
+</html>
+{% endblock %}

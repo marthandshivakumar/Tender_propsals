@@ -1,0 +1,17 @@
+{% extends "login.html" %}
+
+{% block content %}
+<div class="card bg-glass">
+    <div class="card-body px-4 py-5 px-md-5">
+    <form action="{% url 'registerUser' %}" method="post">
+        {% csrf_token %}
+        <h1>Register</h1>
+        {{ form.as_p }}
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">Create</button>
+        </div>
+        
+    </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "home.html" %}
+{% block content %}
+  <h2>Delete Proposal</h2>
+  <p>Are you sure you want to delete the proposal "{{ proposal.title }}"?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="d-flex justify-content-center align-items-center">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </div>
+    
+  </form>
+  <br>
+  <a href="{% url 'list_proposals' %}" class="btn btn-secondary">Cancel</a>
+{% endblock %}
