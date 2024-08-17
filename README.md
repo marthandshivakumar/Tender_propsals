@@ -1,4 +1,5 @@
-# Findlove
+# tender
+
 -configure you are database 
 -crerate superuser to chechk admin process 
 -before runing project install( pip install xhtml2pdf) to genrate pdf
