@@ -84,6 +84,7 @@ This function allows users to delete a proposal.
 
 ## Reorder Proposals
 
-This function allows users to reorder the list of proposals.
+This function allows users to reorder the list of proposals   
+
 
 
