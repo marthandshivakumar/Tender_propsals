@@ -7,7 +7,6 @@ from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 
-# Create your views here.
 
 
 
