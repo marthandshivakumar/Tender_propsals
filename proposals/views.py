@@ -28,7 +28,6 @@ def generate_pdf(request, proposal_id):
     pdf_gen_status = pisa.CreatePDF(html_content, dest=result)
 
     if not pdf_gen_status.err:
-        # Create response with PDF data
         response = HttpResponse(result.getvalue(), content_type='application/pdf')
         response['Content-Disposition'] = f'filename="proposal_{proposal_id}.pdf"'
         return response
