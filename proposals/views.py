@@ -82,6 +82,7 @@ def user_logout(request):
     logout(request)
     return redirect('home') 
 
+#to save the action upto done
 
 def save_record(request,record_id):
     specific_rec = Proposal.objects.get(id=record_id)
