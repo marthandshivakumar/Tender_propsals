@@ -22,8 +22,6 @@ def generate_pdf(request, proposal_id):
     # Convert the proposal details to HTML string
     sections = ProposalSection.objects.filter(proposal=proposal).order_by('position')
     html_content = render_to_string('view_proposal.html', {'proposal': proposal, 'sections': sections, 'pdf_version': True})
-
-    # Convert the HTML to PDF via using filter the objects
     
     result = BytesIO()
     pdf_gen_status = pisa.CreatePDF(html_content, dest=result)
